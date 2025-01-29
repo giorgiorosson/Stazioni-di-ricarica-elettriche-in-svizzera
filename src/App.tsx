@@ -1,26 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+//https:data.geo.admin.ch/ch.bfe.ladestellen-elektromobilitaet/data/oicp/ch.bfe.ladestellen-elektromobilitaet.json
+//https:github
+//
+
+import React, { useReducer } from 'react';
+import { createBrowserRouter, RouterProvider, useLocation } from 'react-router-dom';
+import HomePage from './HomePage';
+import { InitialState, reducer, StateContext } from './reducer';
+import SecondaPagina from './SecondaPagina';
+import Template from './Template';
+import TerzaPagina from './TerzaPagina';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const router = createBrowserRouter([
+        {
+            path: '',
+            element: <Template />,
+            children: [
+                {
+                    path: '',
+                    index: true,
+                    element: <HomePage />
+                },
+                {
+                    path: ':nameCity',
+                    index: true,
+                    element: <SecondaPagina />
+                },
+                {
+                    path: ':nameCity/:nameStation',
+                    index: true,
+                    element: <TerzaPagina />
+                }
+            ]
+        }
+    ]);
+
+    return (
+        <StateContext.Provider value={useReducer(reducer, InitialState)}>
+            <RouterProvider router={router} />
+        </StateContext.Provider>
+    );
 }
 
 export default App;
+
